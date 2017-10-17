@@ -1,0 +1,88 @@
+﻿@model EmployesDB.Employe
+@using EmployesDB.Enums;
+
+
+
+<script>
+    $(function () {
+        $.ajax({
+            url: "/api/values/",
+            type: "GET",
+            success: function (data) {
+                var tableOfEmploye = "<span>Выберите фамилию сотрудника для редактирования:</span><br/><br/><table>";
+                tableOfEmploye += "<tr> <td>Name </td> <td>Surname</td> <td>Age</td> <td>Department</td> <td>Salary</td> <td>Phone Number</td> </tr>";
+                for (var i = 0; i < data.length; i++) {
+                    tableOfEmploye += "<tr>" + "<td class=\"nameClick\">" + data[i].Name + "</td>" + "<td class=\"surnameClick\">" + data[i].Surname + "</td>" + "<td class=\"ageClick\">" + data[i].Age + "</td>" + "<td class=\"departmentClick\">" + data[i].Department + "</td>" + "<td class=\"salaryClick\">" + data[i].Salary + "</td>" + "<td class=\"phoneNumberClick\">" + data[i].PhoneNumber + "</td>" + "</tr>";
+                }
+                tableOfEmploye += "</table>";
+                $("#result").html(tableOfEmploye);
+            }
+        });
+        $("body").on("mouseover", "td.surnameClick", function (event) {
+            $(this).css("cursor", "pointer");
+        });
+        $("body").on("click", "td.surnameClick", function (event) {
+            var employeForEdit = $(this).siblings();
+            var editedSurname = $(this).html();
+            
+            var editedName;           
+            var editedAge;
+            var editedSalary;
+            var editedPhone;
+
+            $(employeForEdit.each(function (index) { //это тупо!!! переделать
+                if ($(this).hasClass("nameClick")) {
+                    console.log($(this).html());
+                    editedName = $(this).html();
+                }
+            }));
+
+            $(employeForEdit.each(function (index) {
+                if ($(this).hasClass("ageClick")) {
+                    console.log($(this).html());
+                    editedAge = $(this).html();
+                }
+            }));
+
+            $(employeForEdit.each(function (index) {
+                if ($(this).hasClass("phoneNumberClick")) {
+                    editedPhone = $(this).html();
+                }
+            }));
+
+            $(employeForEdit.each(function (index) {
+                if ($(this).hasClass("salaryClick")) {
+                    editedSalary = $(this).html();
+                }
+            }));
+
+
+
+
+            $("#result").html("<form id=\"editEmployeForm\"> Имя:<input type=\"text\" name=\"Name\" id=\"name\" value=" + editedName + " /> Фамилия:<input type=\"text\" name=\"Surname\" id=\"surname\" disabled=\"disabled\" value=" + editedSurname + " /><br /> Возраст:<input type=\"number\" name=\"Age\" id=\"age\" step=\"1\" size=\"3\" min=\"19\" max=\"90\" value=" + editedAge + " /><br /> Зарплата: <input type=\"number\" name=\"Salary\" id=\"salary\" step=\"10\" min=\"100\" value=" + editedSalary + " /><br /> Номер телефона:<input type=\"tel\" name=\"PhoneNumber\" id=\"phoneNumber\" value=" + editedPhone + " /><br /> Отдел: <select name=\"Department\" id=\"department\"><option value=@Department.Engineering>Инженерный</option><option value=@Department.Financial>Бухгалтерия</option><option value=@Department.IT>ИТ</option><option value=@Department.Managment>Управление</option><option value=@Department.Marketing>Маркетинг</option></select><br /><input type=\"submit\" id=\"editUser\" value=\"Редактировать\" /></form><br />");
+        });
+
+        $("body").on("submit", "#editEmployeForm", function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: "/api/values/" + $("#surname").val(),
+                type: "PUT",
+                data: {
+                    Name: $("#name").val(),
+                    Surname: $("#surname").val(),
+                    Age: $("#age").val(),
+                    Salary: $("#salary").val(),
+                    PhoneNumber: $("#phoneNumber").val(),
+                    Department: $("#department:selected").val()
+                },
+                success: function () {
+                    alert("User updated");
+                },
+                error: function () {
+                    alert("Permission denied");
+                }
+
+            });
+        });
+    });
+</script>

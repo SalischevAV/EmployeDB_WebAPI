@@ -1,0 +1,68 @@
+﻿@using EmployesDB.Enums;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div id="result"></div>
+<button id="viewAll">Просмотреть всех</button>
+<button id="viewStat">Просмотр статистики</button>
+<button id="add">Добавить пользователя</button>
+<button id="del">Удалить пользователя</button>
+<button id="edit">Редактировать пользователя</button>
+
+<button id="option">Настройки программы</button>
+<button id="clear">Очистить</button>
+
+
+<script>
+    $(function () {
+        $("#viewAll").click(function () {
+            $.ajax({
+                url: "/api/values/",
+                type: "GET",
+                success: function (data) {
+                    console.log(data);
+                    var tableOfEmploye = "<table>";
+                    tableOfEmploye += "<tr> <td>Name </td> <td>Surname</td> <td>Age</td> <td>Department</td> <td>Salary</td> <td>Phone Number</td> </tr>";
+                    for (var i = 0; i < data.length; i++) {
+                        tableOfEmploye += "<tr>" + "<td>" + data[i].Name + "</td>" + "<td>" + data[i].Surname + "</td>" + "<td>" + data[i].Age + "</td>" + "<td>" + data[i].Department + "</td>" + "<td>" + data[i].Salary + "</td>" + "<td>" + data[i].PhoneNumber + "</td>" + "</tr>";
+                    }
+                    tableOfEmploye += "</table>";
+                    $("#result").html(tableOfEmploye);
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#add").click(function () {
+            $("#result").load("\AddEmploye");
+        });
+        $("#del").click(function () {
+            $("#result").load("\DelEmploye");
+        });
+        $("#edit").click(function () {
+            $("#result").load("\EditEmploye");
+        });
+        $("#viewStat").click(function () {
+            $("#result").load("\ViewStatEmploye");
+        });
+
+        $("#option").click(function () {
+            $("#result").load("\OptionDBEmploye");
+       });
+    })
+</script>
+<script>
+    $(function () {
+        $("#clear").click(function () {
+            $("#result").html("");
+        });
+    });
+</script>
+
+

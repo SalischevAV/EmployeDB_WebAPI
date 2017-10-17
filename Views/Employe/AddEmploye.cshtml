@@ -1,0 +1,47 @@
+﻿@using EmployesDB.Enums;
+
+<form id="addEmployeForm">
+    Имя:<input type="text" name="Name" id="name"  />    Фамилия:<input type="text" name="Surname" id="surname" />
+    <br />
+    Возраст:<input type="number" name="Age" id="age" step="1" size="3" min="19" max="90"/>
+    <br />
+    Зарплата: <input type="number" name="Salary" id="salary" step="10" min="100"/>
+    <br />
+    Номер телефона:<input type="tel" name="PhoneNumber" id="phoneNumber" />
+    <br />
+    Отдел: <select name="Department" id="department">
+        <option value=@Department.Engineering>Инженерный</option>
+        <option value=@Department.Financial>Бухгалтерия</option>
+        <option value=@Department.IT>ИТ</option>
+        <option value=@Department.Managment>Управление</option>
+        <option value=@Department.Marketing>Маркетинг</option>
+    </select>
+    <br />
+    <input type="submit" id="addUser" value="Добавить" />
+</form>
+<br />
+<span id="resultSpan"></span>
+<script>
+    $(function () {
+        $("#addEmployeForm").submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: "/api/values/",
+                type: "POST",
+                data: {
+                    Name: $("#name").val(),
+                    Surname: $("#surname").val(),
+                    Age: $("#age").val(),
+                    Salary: $("#salary").val(),
+                    PhoneNumber: $("#phoneNumber").val(),
+                    Department: $("#department:selected").val()
+                },
+                success: function (data) {
+                    $("#resultSpan").html(data.length)
+                }
+            });
+
+        });
+    });
+</script>
+

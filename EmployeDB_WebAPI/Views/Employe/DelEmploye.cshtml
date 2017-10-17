@@ -1,0 +1,21 @@
+﻿@model EmployesDB.Employe
+
+<form id="delEmploye">
+    Фамилия:<input type="text" name="Surame" id="surname" />
+    <input type="submit" id="del" value="Удалить" />
+</form>
+<span id="resultSpan"></span>
+<br />
+
+<script>
+    $("#delEmploye").submit(function (event) {
+        event.preventDefault();
+            $.ajax({
+                url: "/api/values/" + $("#surname").val(),
+                type: "DELETE",
+                success: function (data) {
+                    $("#resultSpan").html(data.length)
+                }
+            });
+ });
+</script>
